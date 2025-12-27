@@ -1,0 +1,52 @@
+x-common-env: &common-env
+  HERO_HOST: ${HERO_HOST}
+  HERO_PORT: ${HERO_PORT}
+
+services:
+  reverse-proxy:
+    image: tvup/reverse-proxy:latest
+    container_name: reverse-proxy
+    volumes:
+      - 'reverse-proxy-nginx-data:/etc/nginx/conf.d'
+    environment:
+      <<: *common-env
+    ports:
+      - "${STAND_IN_PORT:-80}:8181"
+    #      - "443:443"
+    depends_on:
+      - wakeforce
+    networks:
+      - internal
+
+  wakeforce:
+    image: tvup/wakeforce:latest
+    container_name: wakeforce
+    environment:
+      <<: *common-env
+      HERO_MAC: ${HERO_MAC}
+      HERO_BROADCAST: ${HERO_BROADCAST}
+    restart: unless-stopped
+    expose:
+      - "8080"
+    networks:
+      internal: {}
+      lan: {}
+    cap_add:
+      - NET_RAW
+
+
+networks:
+  internal:
+    driver: bridge
+
+  lan:
+    driver: macvlan
+    driver_opts:
+      parent: ${LAN_IFACE}
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
+          gateway: 192.168.1.1
+volumes:
+  reverse-proxy-nginx-data:
+    driver: local
