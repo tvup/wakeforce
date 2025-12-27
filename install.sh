@@ -71,6 +71,3 @@ docker compose up -d --build
 
 echo
 echo "✅ Done. Project dir: $INSTALL_DIR"
-RUN
-
-ttp://localhost/style.css Request method GET
