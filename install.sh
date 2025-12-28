@@ -2,7 +2,6 @@
 set -euo pipefail
 
 BASE_URL="${BASE_URL:-https://raw.githubusercontent.com/tvup/wakeforce/master/}"
-#INSTALL_DIR="${INSTALL_DIR:-$HOME/idle-less}"
 INSTALL_DIR="${INSTALL_DIR:-.}"
 
 require_cmd() { command -v "$1" >/dev/null 2>&1 || { echo "❌ Missing $1"; exit 1; }; }
@@ -23,7 +22,7 @@ require_cmd curl
 require_cmd docker
 docker compose version >/dev/null 2>&1 || { echo "❌ Need docker compose (v2)"; exit 1; }
 
-echo "== Install the gøgemæjet =="
+echo "== Install the gøgemøg =="
 echo
 
 HERO_HOST="${HERO_HOST:-$(prompt HERO_HOST "Enter HERO_HOST (e.g. hero or hero.internal or an IP)" "192.168.1.22")}"
@@ -46,7 +45,6 @@ echo "Downloading docker-compose.yml ..."
 curl -fsSL "$BASE_URL/docker-compose.yml" -o docker-compose.yml
 
 
-# (valgfrit) hent flere filer:
 # curl -fsSL "$BASE_URL/nginx/default.conf.template" -o nginx/default.conf.template
 # curl -fsSL "$BASE_URL/entrypoint.sh" -o entrypoint.sh
 
@@ -60,6 +58,8 @@ HERO_PORT=$HERO_PORT
 HERO_MAC=$HERO_MAC
 HERO_BROADCAST=$HERO_BROADCAST
 LAN_IFACE="${LAN_IFACE:-eth0}"
+STAND_IN_PORT=80
+HEALTH_PATH="/health"
 EOF
 
 echo "✅ Saved HERO_HOST, HERO_PORT, HERO_MAC, HERO_BROADCAST, and LAN_IFACE in .env"
