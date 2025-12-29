@@ -11,8 +11,8 @@ services:
     environment:
       <<: *common-env
     ports:
-      - "${STAND_IN_PORT:-80}:8181"
-    #      - "443:443"
+      - "80:80"
+      - "443:443"
     depends_on:
       - wakeforce
     networks:
